@@ -13,14 +13,9 @@ StreamReader sr = new StreamReader("C:\\Users/prdb/Desktop/JDJD/task8-1.11/Вв�
 string[] input = sr.ReadLine().Split(" ");
 string[] answmas = new string[input.Length-1];
 int[] znak = new int[input.Length / 2 ];
-int answ = 0;
-string a = "";
-int x = 0;
 int k =1;
+int x = 0;
 int y = 0;
-int l = 0;
-int len = answmas.Length - 1;
-int j = answmas.Length - 1;
 static int plus(int x,int y)
 {
     return x + y;
@@ -39,136 +34,191 @@ static int del(int x,int y)
 }
 while (k < input.Length)
 {
-
-    if (input[k] == "/" || input[k] == "*")
+    switch (input[k])
     {
-        if (input[k - 1] == input[k + 1])
-        {
-            answmas[x] = input[k - 1];
-            x++;
-        }
-        else
-        {
-            answmas[x] = input[k - 1];
-            answmas[x + 1] = input[k + 1];
-            x += 2;
-        }
-
-
-        switch (input[k])
-        {
-            case "/":
-                znak[y] = k;
-                y++;
-                break;
-            case "*":
-                znak[y] = k;
-                y++;
-                break;
-        }
-    }
-    k +=2 ;
-
-}
-k = answmas.Length - 1;
-while (k  > 0)
-{ 
-    if (input[k] == "-" || input[k] == "+")
-    {
-        if (input[k - 1] == input[k + 1])
-        {
-            answmas[j-1] = input[k - 1];
-            j--;
-        }
-        else
-        {
-            answmas[j-1] = input[k - 1];
-            answmas[j] = input[k + 1];
-            j -= 2;
-        }
-        
-    }
-    k -=2;
-}
-k = 1;
-while (k < input.Length)
-{
-
-    if (input[k] == "+" || input[k] == "-")
-    {
-        switch (input[k])
-        {
-            case "+":
-                znak[y] = k;
-                y++;
-                break;
-            case "-":
-                znak[y] = k;
-                y++;
-                break;
-        }
+        case "*":
+            znak[y] = k;
+            y++;
+            break;
+        case "/":
+            znak[y] = k;
+            y++;
+            break;
+        case "+":
+            znak[y] = k;
+            y++;
+            break;
+        case "-":
+            znak[y] = k;
+            y++;
+            break;
     }
     k += 2;
 }
-    foreach (string n in answmas)
+
+Stack<int> output = new Stack<int>();
+for(int i = 0; i < znak.Length  ; i++)
 {
-    Console.WriteLine(n);
-}
-foreach (int n in znak)
-{
-    Console.WriteLine(n);
-}
-Stack<string> output = new Stack<string>(answmas.Reverse());
-int i = 0;
-while (answmas.Length > 1)
-{
-    string first = answmas[i];
-    string second = answmas[i+1];
-    switch (input[znak[l]])
+
+    if (i != znak.Length-1)
     {
-        case "+":
-            answ += plus(Convert.ToInt32(first), Convert.ToInt32(second));
-            output.Pop();
-            output.Pop();
-            answmas = output.ToArray();
-            Console.WriteLine("ANSW    ");
-     
-            Console.WriteLine(plus(Convert.ToInt32(first), Convert.ToInt32(second)));
-            l++;
-            break;
-        case "-":
-            answ += min(Convert.ToInt32(first), Convert.ToInt32(second));
-            output.Pop();
-            output.Pop();
-            answmas = output.ToArray();
-            Console.WriteLine("ANSW    ");
-            Console.WriteLine(min(Convert.ToInt32(first), Convert.ToInt32(second)));
-            l++;
-            break;
-        case "*":
-            answ += ymn(Convert.ToInt32(first), Convert.ToInt32(second));
-            output.Pop();
-            output.Pop();
-            answmas = output.ToArray();
-            Console.WriteLine("ANSW    ");
-            Console.WriteLine(ymn(Convert.ToInt32(first), Convert.ToInt32(second)));
-            l++;
-            break;
-        case "/":
-            answ += del(Convert.ToInt32(first), Convert.ToInt32(second));
-            output.Pop();
-            output.Pop();
-            answmas = output.ToArray();
-            Console.WriteLine("ANSW    ");
-            Console.WriteLine(del(Convert.ToInt32(first), Convert.ToInt32(second)));
-            l++;
-            break;
+        if ((input[znak[i]] == "*" || input[znak[i]] == "/") && (input[znak[i + 1]] != "*" && input[znak[i + 1]] != "/"))
+        {
+            switch (input[znak[i]])
+            {
+                case "*":
+                    output.Push(ymn(Convert.ToInt32(input[znak[i] - 1]), Convert.ToInt32(input[znak[i] + 1])));
+                    break;
+                case "/":
+                    output.Push(del(Convert.ToInt32(input[znak[i] - 1]), Convert.ToInt32(input[znak[i] + 1])));
+                    break;
+            }
+            
+            
+        }
+        else if ((input[znak[i]] == "*" || input[znak[i]] == "/") && (input[znak[i + 1]] == "*" || input[znak[i + 1]] == "/"))
+        {
+            switch (input[znak[i]])
+            {
+                case "*":
+                    output.Push(ymn(Convert.ToInt32(input[znak[i] - 1]), Convert.ToInt32(input[znak[i] + 1])));
+                    break;
+                case "/":
+                    output.Push(del(Convert.ToInt32(input[znak[i] - 1]), Convert.ToInt32(input[znak[i] + 1])));
+                    break;
+            }
+            switch (input[znak[i + 1]])
+            {
+
+                case "*":
+                    x = output.Pop();
+                    output.Push(ymn(x, Convert.ToInt32(input[znak[i + 1] + 1])));
+                    break;
+                case "/":
+                    x = output.Pop();
+                    output.Push(del(x, Convert.ToInt32(input[znak[i + 1] + 1])));
+                    break;
+            }
+            i++;
+        }
+        else if ((input[znak[i]] == "-" || input[znak[i]] == "+") && (input[znak[i + 1]] != "*" && input[znak[i + 1]] != "/") && i != 0)
+        {
+            output.Push(Convert.ToInt32(input[znak[i] + 1]));
+        }
+        else if ((input[znak[i]] == "-" || input[znak[i]] == "+") && (input[znak[i + 1]] != "*" || input[znak[i + 1]] != "/") && i == 0)
+        {
+            output.Push(Convert.ToInt32(input[znak[i] - 1]));
+            output.Push(Convert.ToInt32(input[znak[i] + 1]));
+            
+        }
+        else if ((input[znak[i]] == "-" || input[znak[i]] == "+") && (input[znak[i + 1]] == "*" || input[znak[i + 1]] == "/"))
+        {
+
+        }
     }
-
+    else
+    {
+        if (input[znak[i]] == "*" || input[znak[i]] == "/")
+        {
+            switch (input[znak[i]])
+            {
+                case "*":
+                    output.Push(ymn(Convert.ToInt32(input[znak[i] - 1]), Convert.ToInt32(input[znak[i] + 1])));
+                    break;
+                case "/":
+                    output.Push(del(Convert.ToInt32(input[znak[i] - 1]), Convert.ToInt32(input[znak[i] + 1])));
+                    break;
+            }
+            
+        }
+        else if (input[znak[i]] == "+" || input[znak[i]] == "-")
+        {
+            output.Push(Convert.ToInt32(input[znak[i] + 1]));
+            
+        }
+    }
 }
+for (int i = 0; i < znak.Length; i++)
+{
 
-Console.WriteLine(answ);
+    if (i != znak.Length - 1)
+    {
+        if ((input[znak[i]] == "*" || input[znak[i]] == "/") && (input[znak[i + 1]] != "*" && input[znak[i + 1]] != "/"))
+        {
+            List<int> list = new List<int>(znak);
+            list.Remove(znak[i]);
+            znak = list.ToArray();
 
+        }
+        else if ((input[znak[i]] == "*" || input[znak[i]] == "/") && (input[znak[i + 1]] == "*" || input[znak[i + 1]] == "/"))
+        {
+            
+            List<int> list = new List<int>(znak);
+            list.Remove(znak[i]);
+            znak = list.ToArray();
+            i++;
+            List<int> list1 = new List<int>(znak);
+            list1.Remove(znak[i]);
+            znak = list1.ToArray();
+        }
+        else if ((input[znak[i]] == "-" || input[znak[i]] == "+") && (input[znak[i + 1]] != "*" || input[znak[i + 1]] != "/") && i == 0)
+        {
+            List<int> list = new List<int>(znak);
+            list.Remove(znak[i]);
+            znak = list.ToArray();
+        }
+    }
+    else
+    {
+        if (input[znak[i]] == "*" || input[znak[i]] == "/")
+        {
+            List<int> list = new List<int>(znak);
+            list.Remove(znak[i]);
+            znak = list.ToArray();
+        }
+        else if (input[znak[i]] == "+" || input[znak[i]] == "-")
+        {
+            List<int> list = new List<int>(znak);
+            list.Remove(znak[i]);
+            znak = list.ToArray();
+        }
+    }
+}
+foreach(int n in output)
+{
+    Console.WriteLine(n);
+}
+foreach (int n  in znak)
+{
+    Console.WriteLine(n);
+}
+while (output.Count != 1)
+{
+    for (int i = 0; i < znak.Length; i++)
+    {
+        switch (input[znak[i]])
+        {
+            case "+":
+                output.Push(output.Pop() + output.Pop());
+                break;
+            case "-":
+                int sec = output.Pop();
+                int fir = output.Pop();
+                output.Push(sec + fir);
+                break;
+            case "/":
+                int sec1 = output.Pop();
+                int fir2 = output.Pop();
+                output.Push(sec1 / fir2);
+                break;
+            case "*":
+                output.Push(output.Pop() * output.Pop());
+                break;
+
+        }
+    }
+}
+Console.WriteLine(output.Pop());
     sw.Close();
     sr.Close();
 //}
