@@ -2,14 +2,14 @@
 //{
 using System.Runtime.CompilerServices;
 
-StreamWriter sw1 = new StreamWriter("C:\\Users/prdb/Desktop/JDJD/task8-1.11/Ввод.txt");
+StreamWriter sw1 = new StreamWriter("C:\\Users/Максим/Desktop/1.11/task8-1.11/Ввод.txt");
 Console.WriteLine("Введите пример '+','-','/','*'");
 Console.WriteLine("Пример x + y");
 string str = Console.ReadLine();
 sw1.WriteLine(str);
 sw1.Close();
-StreamWriter sw = new StreamWriter("C:\\Users/prdb/Desktop/JDJD/task8-1.11/Вывод.txt");
-StreamReader sr = new StreamReader("C:\\Users/prdb/Desktop/JDJD/task8-1.11/Ввод.txt");
+StreamWriter sw = new StreamWriter("C:\\Users/Максим/Desktop/1.11/task8-1.11/Вывод.txt");
+StreamReader sr = new StreamReader("C:\\Users/Максим/Desktop/1.11/task8-1.11/Ввод.txt");
 string[] input = sr.ReadLine().Split(" ");
 string[] answmas = new string[input.Length-1];
 int[] znak = new int[input.Length / 2 ];
@@ -138,7 +138,7 @@ for(int i = 0; i < znak.Length  ; i++)
         }
     }
 }
-for (int i = 0; i < znak.Length; i++)
+for ( int i = 0; i <= znak.Length;i++)
 {
 
     if (i != znak.Length - 1)
@@ -156,10 +156,16 @@ for (int i = 0; i < znak.Length; i++)
             List<int> list = new List<int>(znak);
             list.Remove(znak[i]);
             znak = list.ToArray();
-            i++;
             List<int> list1 = new List<int>(znak);
             list1.Remove(znak[i]);
             znak = list1.ToArray();
+            
+        }
+        else if ((input[znak[i]] == "-" || input[znak[i]] == "+") && (input[znak[i + 1]] != "*" && input[znak[i + 1]] != "/") && i != 0)
+        {
+            List<int> list = new List<int>(znak);
+            list.Remove(znak[i]);
+            znak = list.ToArray();
         }
         else if ((input[znak[i]] == "-" || input[znak[i]] == "+") && (input[znak[i + 1]] != "*" || input[znak[i + 1]] != "/") && i == 0)
         {
